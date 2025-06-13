@@ -1,0 +1,13 @@
+body {
+    background-color: #222831;
+    font-family: 'Poppins';
+}
+
+#root {
+    max-width: 70%;
+    margin: 0 auto;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    padding: 1.2em;
+    background-color: #DFD0B8;
+    border-radius: 10px;
+}
