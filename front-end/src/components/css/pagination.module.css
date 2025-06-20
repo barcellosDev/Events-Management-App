@@ -1,0 +1,15 @@
+#pages {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.page {
+    padding: 5px;
+    cursor: pointer;
+}
+
+.selected-page,
+.page:hover {
+    background-color: black;
+    color: white;
+}

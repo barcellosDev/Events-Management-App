@@ -21,11 +21,11 @@ export default function Login() {
                 navigate('/dashboard')
             }
 
-            if (response.role === 'Organizer') {
+            if (response.roleName === 'Organizer') {
                 navigate('/events')
             }
 
-            if (response.role === 'Attendee') {
+            if (response.roleName === 'Attendee') {
                 navigate('/events')
             }
         }

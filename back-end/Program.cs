@@ -1,5 +1,6 @@
 
 using back_end.Data;
+using back_end.Models;
 using back_end.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -39,7 +40,7 @@ namespace back_end
                         Encoding.UTF8.GetBytes(builder.Configuration["AppSettings:Token"]!)
                     ),
                     ValidateIssuerSigningKey = true,
-                    RoleClaimType = ClaimTypes.Role
+                    RoleClaimType = "role"
                 };
             });
 

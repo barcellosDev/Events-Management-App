@@ -1,12 +1,12 @@
 import { useEffect } from "react";
 import { useNavigate, Outlet, useLocation } from "react-router-dom";
 
-const accessToken = sessionStorage.getItem("access_token")
 
 const loginRoutes = ['/', '/login', '/register']
 const authenticatedRoutes = ['/', '/events', '/my-events', '/create-event', '/dashboard']
 
 export default function VerifyAuth() {
+    const accessToken = sessionStorage.getItem("access_token")
     const navigate = useNavigate()
     const location = useLocation()
 

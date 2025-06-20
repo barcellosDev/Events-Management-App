@@ -5,7 +5,19 @@ export default function Header({ links, title }) {
     title = title ?? 'Welcome to the Events Management Application'
 
     const linksComponents = links.map((link, index) => {
-        return <Link key={index} to={{pathname: link.pathname}}>{link.name}</Link>
+        const to_options = { pathname: link.pathname }
+
+        if (link?.search)
+            to_options.search = link.search
+
+        if (link?.action)
+            return <Link onClick={link.action} key={index} to={to_options}>{link.name}</Link>
+
+        return <Link
+            key={index}
+            to={to_options}>
+            {link.name}
+        </Link>
     })
 
     return (

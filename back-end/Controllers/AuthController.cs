@@ -17,9 +17,9 @@ namespace back_end.Controllers
                 var response = await _authService.RegisterAsync(request);
                 return Ok(response);
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(new { e.Message });
             }
         }
 
@@ -39,7 +39,7 @@ namespace back_end.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest(e.Message);
+                return BadRequest(new { e.Message });
             }
         }
 

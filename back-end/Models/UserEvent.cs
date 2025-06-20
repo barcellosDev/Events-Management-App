@@ -2,7 +2,7 @@
 {
     public class UserEvent
     {
-        public required uint Id { get; set; }
+        public uint Id { get; set; }
         public required uint UserId { get; set; }
         public User ?User { get; set; }
         public required uint EventId { get; set; }
