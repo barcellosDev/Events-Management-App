@@ -40,7 +40,7 @@ namespace back_end
                         Encoding.UTF8.GetBytes(builder.Configuration["AppSettings:Token"]!)
                     ),
                     ValidateIssuerSigningKey = true,
-                    RoleClaimType = "role"
+                    RoleClaimType = ClaimTypes.Role
                 };
             });
 

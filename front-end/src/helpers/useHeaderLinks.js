@@ -15,12 +15,11 @@ export default function useHeaderLinks() {
             name: "Events"
         },
         {
-            pathname: "/events",
-            search: "?my-events",
+            pathname: "/my-events",
             name: "My events"
         },
         {
-            pathname: "/create-event",
+            pathname: "/events/create",
             name: "New event",
         },
         {
@@ -47,18 +46,30 @@ export default function useHeaderLinks() {
     if (accessToken) {
         const decoded = jwtDecode(accessToken);
 
+        const myEventsCond = (link) => link.pathname === "/my-events"
+        const createEventCond = (link) => link.pathname === "/events/create"
+        const dashboardCond = (link) => link.pathname === "/dashboard"
+
         if (decoded.role === 'Admin') {
             authenticatedLinks = authenticatedLinks.filter(link => {
                 let pass = true
 
-                if (link.pathname === "/create-event")
+                if (createEventCond(link))
                     pass = false
 
-                if (link.pathname === "/events" && link?.search && link.search === '?my-events')
+                if (myEventsCond(link))
                     pass = false
 
                 return pass
             })
+        }
+
+        if (decoded.role === "Organizer") {
+            authenticatedLinks = authenticatedLinks.filter((link) => !myEventsCond(link) && !dashboardCond(link))
+        }
+
+        if (decoded.role === "Attendee") {
+            authenticatedLinks = authenticatedLinks.filter((link) => !createEventCond(link))
         }
     }
 

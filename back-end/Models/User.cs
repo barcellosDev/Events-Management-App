@@ -11,7 +11,7 @@
         public uint RoleId { get; set; }
         public string? RefreshToken { get; set; }
         public DateTime? RefreshTokenExpiryTime { get; set; }
-
-        public ICollection<UserEvent> UserEvents { get; set; } = new List<UserEvent>();
+        public ICollection<Event>? Events { get; set; } = new List<Event>();
+        public ICollection<UserEvent>? UserEvents { get; set; } = new List<UserEvent>();
     }
 }

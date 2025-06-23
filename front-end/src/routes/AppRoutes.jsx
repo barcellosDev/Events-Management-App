@@ -14,6 +14,8 @@ import EventsLayout from '../layouts/EventsLayout';
 const Events = lazy(() => import('../pages/Events'))
 const Dashboard = lazy(() => import('../pages/Dashboard'))
 const CreateEvent = lazy(() => import('../pages/CreateEvent'))
+const MyEvents = lazy(() => import('../pages/MyEvents'))
+const Event = lazy(() => import('../pages/Event'))
 
 
 
@@ -32,9 +34,10 @@ const AppRoutes = () => (
         <Route element={<EventsLayout />}>
 
           <Route path='events' element={<Events />}></Route>
-          <Route path='my-events' element={<Events />}></Route>
-          <Route path='create-event' element={<CreateEvent />}></Route>
+          <Route path='my-events' element={<MyEvents />}></Route>
+          <Route path='events/create' element={<CreateEvent />}></Route>
           <Route path='dashboard' element={<Dashboard />}></Route>
+          <Route path='events/:id' element={<Event />}></Route>
 
         </Route>
 

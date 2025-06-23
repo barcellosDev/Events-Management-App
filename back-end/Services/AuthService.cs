@@ -121,6 +121,9 @@ namespace back_end.Services
         {
             var claims = new List<Claim>
             {
+                new(ClaimTypes.Name, user.Username),
+                new(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new(ClaimTypes.Role, user.Role.Name),
                 new("username", user.Username),
                 new("id", user.Id.ToString()),
                 new("role", user.Role.Name)

@@ -1,23 +1,21 @@
 import { useEffect, useState } from "react"
 import useApi from "../helpers/useApi"
 import Pagination from "../components/Pagination"
-import Event from "../components/Event"
-import { useLocation } from "react-router-dom"
+import EventCard from "../components/EventCard"
 
 export default function Events() {
-    const location = useLocation()
-    const isMyEventsFlagActive = location.search.split('?').includes('my-events')
-
+    const [myEventsFlag, setMyEventsFlag] = useState(false)
     const [events, setEvents] = useState([])
     const [pageNumber, setPageNumber] = useState(1)
+
     const pageSize = 10
 
     const { get } = useApi()
 
     useEffect(() => {
-        const uri = isMyEventsFlagActive ? '/mine' : ''
+        const myEventsQueryParam = myEventsFlag ? '&myEvents=true' : ''
         const getEvents = async () => {
-            const response = await get(`/events${uri}?pageSize=${pageSize}&pageNumber=${pageNumber}`)
+            const response = await get(`/events?pageSize=${pageSize}&pageNumber=${pageNumber}${myEventsQueryParam}`)
 
             if (response !== null) {
                 setEvents(response)
@@ -25,7 +23,7 @@ export default function Events() {
         }
 
         getEvents()
-    }, [pageNumber, pageSize, isMyEventsFlagActive])
+    }, [pageNumber, pageSize, myEventsFlag])
 
     function changePage(newPageNumber) {
         setPageNumber(newPageNumber)
@@ -34,7 +32,7 @@ export default function Events() {
     function ListEvents() {
         if (events.events) {
             return events.events.map(event => (
-                <Event key={event.id} data={event} />
+                <EventCard key={event.id} data={event} />
             ))
         }
     }
@@ -42,6 +40,12 @@ export default function Events() {
     return (
         <div id="main-events-container">
             <h1>Eventos</h1>
+
+            <div id="filters">
+                <p>Filtrar por: </p>
+                <label htmlFor="myEvents">Meus eventos</label>
+                <input type="checkbox" onClick={() => setMyEventsFlag(!myEventsFlag)} name="myEvents" />
+            </div>
 
             <div id="events-list">
                 <ListEvents />

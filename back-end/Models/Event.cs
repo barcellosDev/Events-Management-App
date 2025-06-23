@@ -10,6 +10,8 @@
         public required DateTime EndTime { get; set; } = DateTime.UtcNow;
         public required uint CategoryId { get; set; }
         public Category ?Category { get; set; }
+        public required uint UserId { get; set; }
+        public User? User { get; set; }
         public ICollection<UserEvent> UserEvents { get; set; } = new List<UserEvent>();
     }
 }

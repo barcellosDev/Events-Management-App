@@ -37,18 +37,25 @@ namespace back_end.Data
                 .WithMany(c => c.Events)
                 .HasForeignKey(e => e.CategoryId);
 
+            modelBuilder.Entity<Event>()
+                .HasOne(e => e.User)
+                .WithMany(u => u.Events)
+                .HasForeignKey(e => e.UserId);
+
             modelBuilder.Entity<UserEvent>()
                 .HasKey(ue => new { ue.UserId, ue.EventId });
 
             modelBuilder.Entity<UserEvent>()
                 .HasOne(ue => ue.User)
                 .WithMany(u => u.UserEvents)
-                .HasForeignKey(ue => ue.UserId);
+                .HasForeignKey(ue => ue.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<UserEvent>()
                 .HasOne(ue => ue.Event)
                 .WithMany(e => e.UserEvents)
-                .HasForeignKey(ue => ue.EventId);
+                .HasForeignKey(ue => ue.EventId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

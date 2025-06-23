@@ -1,14 +1,13 @@
+import { useNavigate } from 'react-router-dom'
+import styles from './css/event.module.css'
+
 export default function Event(props) {
+    const navigate = useNavigate()
+
     return (
-        <div className="event-card">
+        <div onClick={() => navigate(`/events/${props.data.id}`)} className={styles['event-card']}>
             <div className="title">
                 <span>{props.data.title}</span>
-            </div>
-            <div className="description">
-                <span>{props.data.description}</span>
-            </div>
-            <div className="location">
-                <span>{props.data.location}</span>
             </div>
             <div className="startTime">
                 <span>{props.data.startTime}</span>
