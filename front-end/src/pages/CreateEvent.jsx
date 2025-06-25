@@ -33,8 +33,7 @@ export default function CreateEvent() {
             categoryId: formData.get('categoryId')
         }
 
-        const response = await post("/events", payload)
-        console.log(response)
+        await post("/events", payload)
     }
 
     return (

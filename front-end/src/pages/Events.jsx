@@ -2,20 +2,20 @@ import { useEffect, useState } from "react"
 import useApi from "../helpers/useApi"
 import Pagination from "../components/Pagination"
 import EventCard from "../components/EventCard"
+import useJwt from "../helpers/useJwt"
 
-export default function Events() {
+export default function Events({ uri }) {
     const [myEventsFlag, setMyEventsFlag] = useState(false)
     const [events, setEvents] = useState([])
     const [pageNumber, setPageNumber] = useState(1)
-
     const pageSize = 10
-
     const { get } = useApi()
+    const jwt = useJwt()
 
     useEffect(() => {
         const myEventsQueryParam = myEventsFlag ? '&myEvents=true' : ''
         const getEvents = async () => {
-            const response = await get(`/events?pageSize=${pageSize}&pageNumber=${pageNumber}${myEventsQueryParam}`)
+            const response = await get(`/${uri ?? "events"}?pageSize=${pageSize}&pageNumber=${pageNumber}${myEventsQueryParam}`)
 
             if (response !== null) {
                 setEvents(response)
@@ -23,7 +23,7 @@ export default function Events() {
         }
 
         getEvents()
-    }, [pageNumber, pageSize, myEventsFlag])
+    }, [pageNumber, pageSize, myEventsFlag, uri])
 
     function changePage(newPageNumber) {
         setPageNumber(newPageNumber)
@@ -39,13 +39,16 @@ export default function Events() {
 
     return (
         <div id="main-events-container">
-            <h1>Eventos</h1>
+            <h1>Events</h1>
 
-            <div id="filters">
-                <p>Filtrar por: </p>
-                <label htmlFor="myEvents">Meus eventos</label>
-                <input type="checkbox" onClick={() => setMyEventsFlag(!myEventsFlag)} name="myEvents" />
-            </div>
+            {
+                jwt?.role === "Organizer" &&
+                <div id="filters">
+                    <p>Filtrar por: </p>
+                    <label htmlFor="myEvents">My Events</label>
+                    <input type="checkbox" onClick={() => setMyEventsFlag(!myEventsFlag)} name="myEvents" />
+                </div>
+            }
 
             <div id="events-list">
                 <ListEvents />

@@ -63,23 +63,47 @@ namespace back_end.Controllers
         [HttpGet("{id:int}")]
         public async Task<ActionResult<Event>> Get(int id)
         {
-            var response = await context.Events
-                .Where(e => e.Id == id)
-                .Include(e => e.Category)
-                .Select(e => new
-                {
-                    Id = e.Id,
-                    Title = e.Title,
-                    Description = e.Description,
-                    Location = e.Location,
-                    StartTime = e.StartTime,
-                    EndTime = e.EndTime,
-                    Category = e.Category
-                })
-                .ToArrayAsync();
+            var userId = uint.Parse(User.FindFirst("id")?.Value);
+            var hasLoggedUserIdRegisteredInEvent = await context
+                .UsersEvents
+                .Where(ue => ue.UserId == userId && ue.EventId == id)
+                .FirstOrDefaultAsync();
 
-            var firstEvent = response[0];
-            return Ok(firstEvent);
+            var response = context.Events
+                    .Where(e => e.Id == id)
+                    .Include(e => e.Category)
+                    .Select(e => new
+                    {
+                        e.Id,
+                        e.Title,
+                        e.Description,
+                        e.Location,
+                        e.StartTime,
+                        e.EndTime,
+                        e.Category,
+                        RegisteredUserId = (uint)0
+                    });
+
+            if (hasLoggedUserIdRegisteredInEvent != null)
+            {
+                response = context.Events
+                    .Where(e => e.Id == id)
+                    .Include(e => e.Category)
+                    .Select(e => new
+                    {
+                        e.Id,
+                        e.Title,
+                        e.Description,
+                        e.Location,
+                        e.StartTime,
+                        e.EndTime,
+                        e.Category,
+                        RegisteredUserId = userId
+                    });
+            }
+
+            var eventInstance = await response.FirstOrDefaultAsync();
+            return Ok(eventInstance);
         }
 
         [HttpPost]
@@ -120,6 +144,26 @@ namespace back_end.Controllers
             return Ok(new
             {
                 Message = "Usuario registrado com sucesso"
+            });
+        }
+
+        [HttpPost("{id:int}/remove-registration")]
+        [Authorize(Roles = "Attendee")]
+        public async Task<ActionResult<object>> RemoveUserRegistration(uint id)
+        {
+            var userId = uint.Parse(User.FindFirst("id")?.Value);
+            var userEventInstance = new UserEvent
+            {
+                UserId = userId,
+                EventId = id
+            };
+
+            context.UsersEvents.Remove(userEventInstance);
+            await context.SaveChangesAsync();
+
+            return Ok(new
+            {
+                Message = "Usuario removido do evento"
             });
         }
 

@@ -1,9 +1,9 @@
 import { useNavigate } from "react-router-dom"
-import { jwtDecode } from "jwt-decode";
+import useJwt from "./useJwt"
 
 export default function useHeaderLinks() {
     const navigate = useNavigate()
-    const accessToken = sessionStorage.getItem("access_token")
+    const jwt = useJwt()
 
     let authenticatedLinks = [
         {
@@ -43,14 +43,12 @@ export default function useHeaderLinks() {
         }
     ]
 
-    if (accessToken) {
-        const decoded = jwtDecode(accessToken);
-
+    if (jwt !== null) {
         const myEventsCond = (link) => link.pathname === "/my-events"
         const createEventCond = (link) => link.pathname === "/events/create"
         const dashboardCond = (link) => link.pathname === "/dashboard"
 
-        if (decoded.role === 'Admin') {
+        if (jwt.role === 'Admin') {
             authenticatedLinks = authenticatedLinks.filter(link => {
                 let pass = true
 
@@ -64,12 +62,12 @@ export default function useHeaderLinks() {
             })
         }
 
-        if (decoded.role === "Organizer") {
+        if (jwt.role === "Organizer") {
             authenticatedLinks = authenticatedLinks.filter((link) => !myEventsCond(link) && !dashboardCond(link))
         }
 
-        if (decoded.role === "Attendee") {
-            authenticatedLinks = authenticatedLinks.filter((link) => !createEventCond(link))
+        if (jwt.role === "Attendee") {
+            authenticatedLinks = authenticatedLinks.filter((link) => !createEventCond(link) && !dashboardCond(link))
         }
     }
 

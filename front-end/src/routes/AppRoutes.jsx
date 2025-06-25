@@ -1,5 +1,6 @@
 import { lazy, Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
+import useJwt from '../helpers/useJwt';
 
 import VerifyAuth from './VerifyAuth';
 import Login from '../pages/Login';
@@ -14,10 +15,9 @@ import EventsLayout from '../layouts/EventsLayout';
 const Events = lazy(() => import('../pages/Events'))
 const Dashboard = lazy(() => import('../pages/Dashboard'))
 const CreateEvent = lazy(() => import('../pages/CreateEvent'))
-const MyEvents = lazy(() => import('../pages/MyEvents'))
 const Event = lazy(() => import('../pages/Event'))
 
-
+const jwt = useJwt()
 
 const AppRoutes = () => (
   <Suspense fallback={<Loading />}>
@@ -34,7 +34,7 @@ const AppRoutes = () => (
         <Route element={<EventsLayout />}>
 
           <Route path='events' element={<Events />}></Route>
-          <Route path='my-events' element={<MyEvents />}></Route>
+          <Route path='my-events' element={<Events uri={`users/${jwt?.id}/registrations`} />}></Route>
           <Route path='events/create' element={<CreateEvent />}></Route>
           <Route path='dashboard' element={<Dashboard />}></Route>
           <Route path='events/:id' element={<Event />}></Route>

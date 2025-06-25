@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import useApi from "../helpers/useApi"
+import useJwt from "../helpers/useJwt"
 
 export default function Event() {
     const navigate = useNavigate()
     const { id } = useParams()
-    const { get } = useApi()
+    const { get, post } = useApi()
+    const jwt = useJwt()
     const [event, setEvent] = useState({})
-
-    console.log(id)
 
     useEffect(() => {
         const getEvent = async () => {
@@ -21,6 +21,26 @@ export default function Event() {
 
         getEvent()
     }, [])
+
+    async function registerToEvent() {
+        const response = await post(`/events/${id}/register`)
+
+        if (response !== null) {
+            const newEvent = {...event}
+            newEvent.registeredUserId = jwt.id
+            setEvent(newEvent)
+        }
+    }
+
+    async function deleteUseRegistration() {
+        const response = await post(`/events/${id}/remove-registration`)
+
+        if (response !== null) {
+            const newEvent = {...event}
+            delete newEvent.registeredUserId
+            setEvent(newEvent)
+        }
+    }
 
     return (
         <>
@@ -45,7 +65,16 @@ export default function Event() {
             </div>
         </div>
         <div>
-            <button onClick={() => navigate('/events')}>Go back</button>
+            <button onClick={() => navigate(-1)}>Go back</button>
+            {
+                jwt?.role === "Attendee" && 
+                jwt.id != event?.registeredUserId &&
+                <button onClick={registerToEvent}>Register</button>
+            }
+            {
+                jwt.id == event?.registeredUserId &&
+                <button onClick={deleteUseRegistration}>Desvincular do evento</button>
+            }
         </div>
         </>
     )

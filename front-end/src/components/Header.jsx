@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom"
 import styles from './css/header.module.css'
+import useJwt from '../helpers/useJwt'
 
 export default function Header({ links, title }) {
-    title = title ?? 'Welcome to the Events Management Application'
+    const jwt = useJwt()
+    title = title ?? `Welcome, ${jwt?.username ?? ''}`
 
     const linksComponents = links.map((link, index) => {
         const to_options = { pathname: link.pathname }
